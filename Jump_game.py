@@ -25,7 +25,7 @@ i = 0
 black = (0, 0, 0)
 
 
-class Character:
+class Char:
     def __init__(self, x, y, velx, vely, jump):
         # Walk
         self.x = x
