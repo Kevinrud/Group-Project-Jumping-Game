@@ -1,5 +1,4 @@
 import pygame
-import time
 
 pygame.init()
 
@@ -13,55 +12,58 @@ bg = pygame.transform.scale(bg_img, (1100, 600))
 # Set the name of the game window
 pygame.display.set_caption("Jump Game")
 
-clock = pygame.time.Clock()
-
-# Variables
+# Global Variables
 x = 250
 y = 395
 
-
+jump = False
 width = 1100
-i = 0
 black = (0, 0, 0)
 
 
-
 class Character:
-    """Class that represents the player."""
-    def __init__(self, x, y):
+    def __init__(self, x, y, velx, vely, jump):
         # Walk
         self.x = x
         self.y = y
-        self.velx = 10
-        self.vely = 10
-        self.jump = False
-        self.stepIndex = 0
+        self.vel_x = velx
+        self.vel_y = vely
+        self.jump = jump
 
     def move_char(self, userInput):
         # Moving left, right and jumping
-        if userInput[pygame.K_RIGHT] and self.x < 1050:
-            self.x += self.velx
         if userInput[pygame.K_LEFT] and self.x > 0:
-            self.x -= self.velx
+            self.x -= self.vel_x
+        if userInput[pygame.K_RIGHT] and self.x < 1050:
+            self.x += self.vel_x
 
         # When player presses space bar set jump to True
         if not self.jump and userInput[pygame.K_SPACE]:
             self.jump = True
 
-        # When jump is True player jumps.
+        # When jump is True
         if self.jump:
-            self.y -= self.vely * 4
-            self.vely -= 1
-        if self.vely < -10:
-            self.jump = False
-            self.vely = 10
+            self.y -= self.vel_y*4
+            self.vel_y -= 1
+            if self.vel_y < -10:
+                self.jump = False
+                self.vel_y = 10
 
-    def draw_char(self, window):
+        # Eugenio Jag addet then här code to allow the rectangle to jump and move
+        # Allows the player to "fly"
+        if userInput[pygame.K_UP] and self.y > 0:
+            self.y -= self.vel_y
+        if userInput[pygame.K_DOWN] and self.y < 455: # Eugenio Change from 400 to 455
+            self.y += self.vel_y
+
+    # Eugenio added code här to Drawing the game
+    def draw_char(self):
+        # Eugenio Change the bg rectangle med image R1.png
+        # window.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
         # The player's character for now is just a black rectangle. rect(window, color, (x, y, width, height))
         pygame.draw.rect(window, black, (self.x, self.y, 50, 100))
 
 
-# Drawing the game
 def draw_game():
     global i
 
@@ -80,54 +82,39 @@ def draw_game():
         i = 0
     i -= 1
 
-    player.draw_char(window)
+    # Eugenio add these code  to call the draw_game function
+    player.draw_char()
+    pygame.time.delay(5)
     pygame.display.update()
 
 
-player = Character(250, 395)
-
-# Main Loop
-# While run is True the game will run
-run = True
-while run:
+i = 0
+player = Character(250, 395, 10, 10, False)
 
 
+# The application start here
+def main():
 
-    # pygame.QUIT = the red x button will close the window because run will be False
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+    # Main Loop
+    # While run is True the game will run
+    run = True
+    while run:
 
-    # Allow the player to control the character
-    userInput = pygame.key.get_pressed()
+        # pygame.QUIT = the red x button will close the window because run will be False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
 
-    # Movement
-    player.move_char(userInput)
+        # Allow the player to control the character
+        userInput = pygame.key.get_pressed()
 
-    """# Moving left, right and jumping
-    if userInput[pygame.K_LEFT] and x > 0:
-        x -= vel_x
-    if userInput[pygame.K_RIGHT] and x < 1050:
-        x += vel_x
+        # Movement
+        player.move_char(userInput)
 
-    # When player presses space bar set jump to True
-    if not jump and userInput[pygame.K_SPACE]:
-        jump = True
+        # Draw game in window
+        draw_game()
 
-    # When jump is True
-    if jump:
-        y -= vel_y*4
-        vel_y -= 1
-        if vel_y < -10:
-            jump = False
-            vel_y = 10"""
 
-    # Allows the player to "fly"
-    """if userInput[pygame.K_UP] and y > 0:
-        y -= vel_y
-    if userInput[pygame.K_DOWN] and y < 400:
-        y += vel_y"""
-
-    # Draw Game in window
-    draw_game()
+if __name__ == '__main__':
+    main()
 
