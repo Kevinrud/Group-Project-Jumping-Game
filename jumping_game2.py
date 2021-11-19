@@ -37,11 +37,13 @@ class Character:
         self.jump_vel = self.JUMP_VEL
 
 
-        self.image = pygame.image.load(os.path.join("", "R1.png"))
+        #self.image = pygame.image.load(os.path.join("", "R1.png"))
+        # Load image of character running
+        self.image = pygame.image.load(os.path.join("razz", "jump2.png"))
         self.image_rect = self.image.get_rect()
         self.image_rect.x = self.X_POS
         self.image_rect.y = self.Y_POS
-        self.jumpCount = self.jumpCount
+
 
     def move_char(self, userInput):
         # Moving left, right and jumping
