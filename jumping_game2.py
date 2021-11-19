@@ -23,11 +23,10 @@ black = (0, 0, 0)
 
 
 class Character:
-    JUMP_VEL = 1.5
+    JUMP_VEL = 3.6
     X_POS = 80
     Y_POS = 450
-    image=None
-    jumpCount = 10
+
     def __init__(self, x, y, velx, vely, jump):
         # Walk
         self.x = x
@@ -76,27 +75,13 @@ class Character:
 
     def make_a_jump(self,jump):
 
-         self.image = self.image
-         if self.jump:
-             self.image_rect.y -= self.jump_vel
-             self.jump_vel -= 0.01
-         if self.jump_vel < -self.JUMP_VEL:
-             print("test")
-             self.image_jump = False
-             #self.image_vel = self.JUMP_VEL
-             self.image_vel =10
 
+          self.image_rect.y -= self.jump_vel
+          self.jump_vel -= 0.01
+          if self.jump_vel < -self.JUMP_VEL:
+              self.jump = False
+              self.jump_vel= self.JUMP_VEL
 
-        # self.jumpCount = 10
-        # if self.jumpCount >= -10:
-        #     neg = 1
-        #     if self.jumpCount < 0:
-        #         neg = -1
-        #     self.y -= (self.jumpCount ** 2) * 0.5 * neg
-        #     self.jumpCount -= 1
-        # else:
-        #     self.isJump = False
-        #     self.jumpCount = 10
 
 
 def draw_game():
