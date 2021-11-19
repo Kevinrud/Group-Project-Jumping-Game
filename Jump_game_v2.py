@@ -11,16 +11,16 @@ window = pygame.display.set_mode((1100, 600))      # set_mode((Tuple))
 def pictures():
     global bg, jumping_scale, stone_scaled, mushroom_scaled
     # Load and scale the background image
-    bg_img = pygame.image.load('2d_background.jpg')
+    bg_img = pygame.image.load('pictures/2d_background.jpg')
     bg = pygame.transform.scale(bg_img, (1100, 600))
     # Load image of character running
     jumping = pygame.image.load(os.path.join("razz", "jump2.png"))
     jumping_scale = pygame.transform.scale(jumping, (100, 100))
     # Load image of stone and scale it
-    the_stone = pygame.image.load('stone.png')
+    the_stone = pygame.image.load('pictures/stone.png')
     stone_scaled = pygame.transform.scale(the_stone, (125, 125))
     # Load image of stone and scale it
-    the_mushroom = pygame.image.load('mushroom.png')
+    the_mushroom = pygame.image.load('pictures/mushroom.png')
     mushroom_scaled = pygame.transform.scale(the_mushroom, (125, 125))
 
 
