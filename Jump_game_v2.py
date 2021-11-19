@@ -1,18 +1,30 @@
 import pygame
 import os
+import random
 
 pygame.init()
 
 # Set the size of the game window
 window = pygame.display.set_mode((1100, 600))      # set_mode((Tuple))
 
-# Load and scale the background image
-bg_img = pygame.image.load('2d_background.jpg')
-bg = pygame.transform.scale(bg_img, (1100, 600))
 
-# Load image of character running
-jumping = pygame.image.load(os.path.join("razz", "jump2.png"))
-jumping_scale = pygame.transform.scale(jumping, (100, 100))
+def pictures():
+    global bg, jumping_scale, stone_scaled, mushroom_scaled
+    # Load and scale the background image
+    bg_img = pygame.image.load('2d_background.jpg')
+    bg = pygame.transform.scale(bg_img, (1100, 600))
+    # Load image of character running
+    jumping = pygame.image.load(os.path.join("razz", "jump2.png"))
+    jumping_scale = pygame.transform.scale(jumping, (100, 100))
+    # Load image of stone and scale it
+    the_stone = pygame.image.load('stone.png')
+    stone_scaled = pygame.transform.scale(the_stone, (125, 125))
+    # Load image of stone and scale it
+    the_mushroom = pygame.image.load('mushroom.png')
+    mushroom_scaled = pygame.transform.scale(the_mushroom, (125, 125))
+
+
+pictures()
 
 
 # Load image of character running
@@ -32,20 +44,18 @@ def char_img_scaling():
 pygame.display.set_caption("Jump Game")
 
 # Global Variables
-x = 250
-y = 395
-
 width = 1100
 black = (0, 0, 0)
+i = 0
 
 # Clock
 clock = pygame.time.Clock()
 
 
 class Character:
-    JUMP_VEL = 3.6
-    X_POS = 80
-    Y_POS = 450
+    JUMP_VEL = 2
+    x = 250
+    y = 395
 
     def __init__(self, x, y, velx, vely, jump):
         # Walk
@@ -53,17 +63,19 @@ class Character:
         self.y = y
         self.vel_x = velx
         self.vel_y = vely
-        self.jump = jump
+
         self.face_right = True
         self.stepIndex = 0
         self.count = 0
         self.index = 0
+
+        self.jump = jump
         self.jump_vel = self.JUMP_VEL
 
         self.image = jumping_scale
         self.image_rect = self.image.get_rect()
-        self.image_rect.x = self.X_POS
-        self.image_rect.y = self.Y_POS
+        self.image_rect.x = self.x
+        self.image_rect.y = self.y
 
     def move_char(self, userInput):
         # Moving left, right and jumping
@@ -99,18 +111,60 @@ class Character:
         if self.stepIndex >= 4:
             self.stepIndex = 0
         if self.jump:
-            window.blit(jumping_scale, (self.x, self.y))
+            window.blit(char_img_scaling()[self.stepIndex], (self.image_rect.x, self.image_rect.y))
         elif self.face_right:
             window.blit(char_img_scaling()[self.stepIndex], (self.x, self.y))
             self.stepIndex += 1
 
     def make_a_jump(self, jump):
-
         self.image_rect.y -= self.jump_vel
-        self.jump_vel -= 0.01
-        if self.jump_vel < -self.JUMP_VEL:
+        self.jump_vel -= 0.015
+
+        if self.jump_vel < -3:
             self.jump = False
             self.jump_vel = self.JUMP_VEL
+            self.image_rect.y = self.y
+
+
+class Stone(object):
+    img = stone_scaled
+
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.hitbox = (x, y, width, height)
+        self.count = 0
+
+    def draw(self, window):
+        self.hitbox = (self.x -5, self.y + 10, self.width + 52, self.height +30)
+        if self.count >= 8:
+            self.count = 0
+        window.blit(self.img, (self.x, 390))
+        self.count += 1
+        pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)
+
+
+class Mushroom(object):
+    img = mushroom_scaled
+
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.hitbox = (x, y, width, height)
+        self.count = 0
+
+    def draw(self, window):
+        self.hitbox = (self.x -5, self.y + 10, self.width + 52, self.height +30)
+        if self.count >= 8:
+            self.count = 0
+        window.blit(self.img, (self.x, 390))
+        self.count += 1
+        pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)
+
 
 def draw_game():
     global i
@@ -130,15 +184,20 @@ def draw_game():
         i = 0
     i -= 1
 
-    # Eugenio add these code  to call the draw_game function
+    for x in objects:
+        x.draw(window)
+
     player.draw_char()
-    pygame.time.delay(30)
+    stonee.draw(bg)
+    musshroom.draw(bg)
     pygame.display.update()
 
 
-i = 0
-player = Character(250, 395, 10, 10, False)
 
+player = Character(250, 395, 10, 10, False)
+stonee = Stone(290, 360, 100, 100)
+musshroom = Mushroom(200, 360, 100, 100)
+objects = []
 
 # The application start here
 def main():
