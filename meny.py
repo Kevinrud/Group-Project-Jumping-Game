@@ -1,3 +1,4 @@
+import threading
 
 import pygame
 import sys
@@ -151,8 +152,6 @@ def main():
 
         pygame.display.set_caption("Jumping game")
 
-        #Ico = pygame.image.load("assets/DinoWallpaper.png")
-        #pygame.display.set_icon(Ico)
 
         if stage == 'menu':
             button_draw(screen, button_1)
@@ -169,7 +168,7 @@ def main():
         #    pass
         pygame.display.update()
 
-    print("hey")
+
     pygame.display.quit()
     pygame.quit()
     sys.exit()
