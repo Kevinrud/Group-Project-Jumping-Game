@@ -279,13 +279,15 @@ def menu(death_count,objects,player,objectt):
     while run:
         #Eug add these window when the object death
         FONT_COLOR=(   0,  0,  0) #Text color will be black
+        RED   = (255,  0,  0)
+        GREEN = (  0,255,  0)
         window.fill((128, 128, 128))
         window.blit(bg, (0, 0))#Euge thi s is the first background bg
         font = pygame.font.Font("freesansbold.ttf", 30)
 
         if death_count == 0:
-            text_on_death= font.render("The player has eaten Mushroom and died!!!!!.", True, FONT_COLOR)
-            text = font.render("Eaten Mushroom and died!!..Press any Key to Start", True, FONT_COLOR)
+            text2= font.render("The player has eaten Mushroom and died!!!!!.", True, FONT_COLOR)
+            text = font.render("Press any Key to Start", True, RED)
         elif death_count > 0:
             text = font.render("Press any Key to Restart", True, FONT_COLOR)
             score = font.render("Your Score: " + str(points), True, FONT_COLOR)
@@ -308,8 +310,12 @@ def menu(death_count,objects,player,objectt):
             hs_score_rect.center = (width  // 2, height // 2 + 100)
             window.blit(hs_score_text, hs_score_rect)
         textRect = text.get_rect()
+        textRect2 = text2.get_rect()
+
         textRect.center = (width  // 2, height // 2)
+        textRect2.center = (width  // 2, height // 5)
         window.blit(text, textRect)
+        window.blit(text2, textRect2)
         window.blit(RUNNING[0], (width  // 2 - 20, height // 2 - 140))
         pygame.display.update()
 
@@ -432,4 +438,3 @@ def main(): # The application start here
 
 if __name__ == '__main__':
     main()
-
