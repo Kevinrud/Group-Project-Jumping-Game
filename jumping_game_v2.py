@@ -1,6 +1,8 @@
+
 import pygame
 import os
 import random
+from pygame import mixer
 from pygame.locals import *
 
 pygame.init()
@@ -234,7 +236,7 @@ def draw_game():
     for objectt in objects:
         objectt.draw(window)
 
-    pygame.display.update()
+        #pygame.display.update()
 
 
 # Variables
@@ -269,7 +271,7 @@ def restart_game(objects,player,objectt):
 # Euge Show when the game collide
 def menu(death_count,objects,player,objectt):
     global points
-    points = 0
+    points += 1
     global FONT_COLOR
     objects = objects
     player = player
@@ -344,14 +346,18 @@ def main(): # The application start here
         FONT_COLOR=(   0,  0,  0) #Text color will be black
         points += 1
 
-        if points % 100 == 0:
+        if points % 1000 == 0:
             game_speed += 1
 
         with open("score.txt", "r") as f:
             score_ints = [int(x) for x in f.read().split()]
+            #Eug check if file is empty
+            if len(score_ints)==0:
+                score_ints.append(0)
             highscore = max(score_ints)
             if points > highscore:
                 highscore=points
+
             text = ("High Score test: " + str(highscore) + "  Points: " + str(points))
             text = font.render(text , True, FONT_COLOR)
             text1 ="You can Press 'P' to pause."
@@ -367,6 +373,7 @@ def main(): # The application start here
         global pause, run
         pause = False
         run = True
+        main()
 
     def paused():
         global pause
@@ -382,25 +389,45 @@ def main(): # The application start here
         pygame.display.update()
 
         while pause:
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_u:
+                    pause = False
                     unpause()
+
+    file = r'C:\Program Files\Common Files\music\Alice (8 Bit).mp3'
+    pygame.init()
+    pygame.mixer.init()
+    pygame.mixer.music.set_volume(0.03)
+    pygame.mixer.music.load(file)
+    pygame.mixer.music.play(-1)  # If the loops is -1 then the music will repeat indefinitely.
 
     # While run is True the game will run
     run = True
     while run:
 
         # pygame.QUIT = the red x button will close the window because run will be False
+        # press s for stopping music and r for resuming music
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            #Eug new code to allow the user to pause
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                run = False
-                paused()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    mixer.music.pause()
+                if event.key == pygame.K_r:
+                    mixer.music.unpause()
+                if event.key == pygame.K_q:
+                    run = False
+                #Eug new code to allow the user to pause
+                if event.key == pygame.K_p:
+                    run = False
+                    paused()
+                if event.key == pygame.K_u:
+                    run = True
+                    unpause()
 
             if event.type == USEREVENT + 2:
                 r = random.randrange(0, 2)
@@ -434,7 +461,10 @@ def main(): # The application start here
 
         # Draw game in window
         draw_game()
-    score() # Euge will be done later added these call to score function
+        score() # Euge will be done later added these call to score function
+        pygame.display.update()
+
 
 if __name__ == '__main__':
     main()
+
