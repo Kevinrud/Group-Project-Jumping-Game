@@ -241,7 +241,7 @@ def draw_game():
     for objectt in objects:
         objectt.draw(window)
 
-    # pygame.display.update()
+        # pygame.display.update()
 
 
 # Variables
@@ -274,7 +274,13 @@ def restart_game(objects, player, objectt):
     main()
 
 
-# Euge Show when the game collide
+# Euge write the points to .txt file when the game collide
+def write_score(points):
+    f = open("score.txt", "a")
+    f.write(str(points) + "\n")
+    f.close()
+
+
 def menu(death_count, objects, player, objectt):
     global points, score_ints
     # points = 0
@@ -283,6 +289,19 @@ def menu(death_count, objects, player, objectt):
     objects = objects
     player = player
     objectt = objectt
+
+    # Eugen 30/11/2021 here get the max score from the file out of the fie
+    with open("score.txt", "r") as f:
+        score_ints = [int(x) for x in f.read().split()]
+        #Eug check if file is empty
+        if len(score_ints)==0:
+            score_ints.append(0)
+
+        highscore = max(score_ints)
+        if points > highscore:
+            highscore=points
+        print(highscore)
+    # End Eugen 30/11/2021
 
     run = True
     while run:
@@ -305,15 +324,7 @@ def menu(death_count, objects, player, objectt):
         scoreRect = score.get_rect()
         scoreRect.center = (width // 2, height // 2 + 50)
         window.blit(score, scoreRect)
-        # Euge change code här
-        # f = open("score.txt", "a")
-        # f.write(str(points) + "\n")
-        # f.close()
-        # with open("score.txt", "r") as f:
-        # score = (
-        #    f.read()
-        # )  # Read all file in case values are not on a single line
-        # score_ints = [int(x) for x in score.split()]  # Convert strings to ints
+
 
         score_ints.append(points)
         highscore = max(score_ints)  # sum all elements of the list
@@ -342,7 +353,8 @@ def menu(death_count, objects, player, objectt):
 
             if event.type == pygame.KEYDOWN:
                 # Eugenio now we save the points to the file only once
-
+                #Eugenio now we save the points to the file only once
+                write_score(points)
                 # Eugenio here need to reset the game
                 restart_game(objects, player, objectt)
 
@@ -415,7 +427,7 @@ def main():  # The application start here
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_u:
                     pause = False
                     unpause()
-
+    #file = r'C:\Program Files\Common Files\music\Alice (8 Bit).mp3'
     file = r'C:\Users\marcu\Music\Alice (8 Bit).mp3'
     pygame.init()
     pygame.mixer.init()
@@ -481,7 +493,7 @@ def main():  # The application start here
                         death_count += 1
                         pygame.time.delay(100)
                         menu(death_count, objects, player, objectt)
-                # End Eug code to fix Stone objectt
+                        # End Eug code to fix Stone objectt
 
             global game_speed
             objectt.x -= game_speed
